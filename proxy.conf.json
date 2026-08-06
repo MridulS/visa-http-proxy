@@ -1,0 +1,28 @@
+[
+    {
+        "match": "^/jupyter/(\\d+).*",
+        "type": "jupyter",
+        "name": "Jupyter",
+        "remotePort": 8888,
+        "ws": true
+    },
+    {
+        "match": "^/visafs/(\\d+).*",
+        "type": "service",
+        "name": "Visa Files",
+        "remotePort": 8090,
+        "pathRewrite": {
+            "^/visafs/\\d+/": "/"
+        }
+    },
+    {
+        "match": "^/ws/print/(\\d+).*",
+        "type": "service",
+        "name": "Visa Printing",
+        "remotePort": 8091,
+        "pathRewrite": {
+            "^/ws/print/\\d+/": "/socket.io/"
+        },
+        "ws": true
+    }
+]
