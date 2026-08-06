@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  # Callable so the release workflow gates publishing on the same checks
+  # rather than trusting that the tagged commit was green on main.
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
+        with:
+          # Honours the go/toolchain directives in go.mod; check-latest picks up
+          # the newest patch of that minor, which is where security fixes land.
+          go-version-file: go.mod
+          check-latest: true
+
+      - name: gofmt
+        run: |
+          unformatted=$(gofmt -l .)
+          if [ -n "$unformatted" ]; then
+            echo "not gofmt'd:"
+            echo "$unformatted"
+            exit 1
+          fi
+
+      - run: go vet ./...
+      - run: go test -race -count=1 ./...
+
+  govulncheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: go.mod
+          check-latest: true
+      # This module has no dependencies, so this is purely a stdlib check — and
+      # that is the point: the toolchain floor in go.mod is the only thing
+      # standing between this proxy and known net/http bugs.
+      - run: go run golang.org/x/vuln/cmd/govulncheck@latest ./...
