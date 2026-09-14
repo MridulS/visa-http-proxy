@@ -7,6 +7,13 @@
         "ws": true
     },
     {
+        "match": "^/marimo/(\\d+).*",
+        "type": "service",
+        "name": "Marimo",
+        "remotePort": 2718,
+        "ws": true
+    },
+    {
         "match": "^/visafs/(\\d+).*",
         "type": "service",
         "name": "Visa Files",
