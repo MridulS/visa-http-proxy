@@ -8,4 +8,4 @@ go 1.26
 // HTTP/2 infinite loop, both squarely on this proxy's path. Raise this floor
 // when a later patch release fixes something reachable; a newer local toolchain
 // is still used as-is.
-toolchain go1.26.5
+toolchain go1.26.8
